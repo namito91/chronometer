@@ -115,145 +115,105 @@ fun ChronometerScreen() {
     }
 
 
-    // UI del tiempo
+    // Interfaz de usuario
     Column(
-
         modifier = Modifier
-            .padding(top = 150.dp)
+            .padding(top = 200.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
-
     ) {
+        Text(text = formattedTime, fontSize = 65.sp, fontFamily = FontFamily.Monospace)
 
-        Text(text = formattedTime, fontSize = 80.sp, fontFamily = FontFamily.Monospace)
-    }
-
-
-    // UI de botones
-    Column(
-
-        modifier = Modifier
-            .padding(top = 250.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-
-    ) {
-
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(45.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(10.dp)
-        ) {
-
-            Button(
-
-                onClick = {
-                    isRunning = true
-
-
-                },
-                shape = CircleShape,
-
-                modifier = Modifier
-                    .size(90.dp),
-                colors = ButtonDefaults.buttonColors(
-                    Color(0xFF039BE5), Color.White
-                ),
-                border = BorderStroke(2.dp, Color.Black)
-
-            )
-
-
-            {
-                Text("START", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            }
-
-
-            Button(
-                onClick = {
-                    isRunning = false
-
-                    savedElapsedTime += System.currentTimeMillis() - startTime
-
-                },
-                shape = CircleShape,
-                modifier = Modifier
-                    .size(90.dp),
-                colors = ButtonDefaults.buttonColors(
-                    Color(0xFFF4511E), Color.White
-                ),
-                border = BorderStroke(2.dp, Color.Black)
-            ) {
-                Text("STOP", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            }
-
-        }
-
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 20.dp)
-        ) {
-            Button(
-                onClick = {
-
-                    recordedTimeListt.add(formattedTime)
-                },
-                shape = RoundedCornerShape(3.dp), // Borde redondeado, puedes ajustar el radio para cambiar la curva
-                colors = ButtonDefaults.buttonColors(
-                    Color(0xFF6B6A67), Color.White
-                )
-            ) {
-                Text("Lap")
-            }
-        }
-
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 20.dp)
-        ) {
-
-
-            Button(
-                onClick = {
-                    isRunning = false // detiene el cronometro
-                    formattedTime = "00:00"
-                    savedElapsedTime = 0L
-                    recordedTimeListt.clear()
-                },
-                shape = RoundedCornerShape(3.dp), // Borde redondeado, puedes ajustar el radio para cambiar la curva
-                colors = ButtonDefaults.buttonColors(
-                    Color(0xFF6B6A67), Color.White
-                )
-            ) {
-                Text("RESET")
-            }
-        }
-
-
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
-                .padding(top = 50.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(10.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(45.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(10.dp)
+            ) {
+                // Botón START
+                Button(
+                    onClick = { isRunning = true },
+                    shape = CircleShape,
+                    modifier = Modifier.size(90.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF039BE5), Color.White),
+                    border = BorderStroke(2.dp, Color.Black)
+                ) {
+                    Text("START", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                }
 
-            items(recordedTimeListt) { time ->
+                // Botón STOP
+                Button(
+                    onClick = {
+                        isRunning = false
+                        savedElapsedTime += System.currentTimeMillis() - startTime
+                    },
+                    shape = CircleShape,
+                    modifier = Modifier.size(90.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFFF4511E), Color.White),
+                    border = BorderStroke(2.dp, Color.Black)
+                ) {
+                    Text("STOP", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
+            }
 
-                Text(text = time, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            // Botón Lap
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 20.dp)
+            ) {
+                Button(
+                    onClick = {
+                        recordedTimeListt.add(formattedTime)
+                    },
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF6B6A67), Color.White)
+                ) {
+                    Text("Lap")
+                }
+            }
 
+            // Botón RESET
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 20.dp)
+            ) {
+                Button(
+                    onClick = {
+                        isRunning = false
+                        formattedTime = "00:00"
+                        savedElapsedTime = 0L
+                        recordedTimeListt.clear()
+                    },
+                    shape = RoundedCornerShape(3.dp),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF6B6A67), Color.White)
+                ) {
+                    Text("RESET")
+                }
+            }
+
+            // LazyColumn con altura limitada
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+                    .padding(top = 50.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(recordedTimeListt) { time ->
+                    Text(text = time, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                }
             }
         }
-
     }
-
 
 }
 
