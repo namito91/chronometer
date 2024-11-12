@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sysarcomp.chronometex.ui.components.MainScreen
 import com.sysarcomp.chronometex.ui.theme.ChronometexTheme
 import kotlinx.coroutines.delay
 
@@ -53,7 +55,9 @@ class MainActivity : ComponentActivity() {
 
                     Box(modifier = Modifier.padding(innerPadding)) {
 
-                        ChronometerScreen()
+                        MainScreen()
+
+                        //ChronometerScreen()
                     }
                 }
             }
@@ -72,6 +76,9 @@ fun ChronometerScreen() {
 
     // Usamos mutableStateListOf para que la lista sea observable y se actualice cuando cambie
     val recordedTimeListt = remember { mutableStateListOf<String>() }
+
+    // LazyListState para controlar el desplazamiento
+    val listState = rememberLazyListState()
 
 
     // Efecto que ejecuta el incremento de tiempo cada segundo cuando está activo
@@ -106,12 +113,6 @@ fun ChronometerScreen() {
             delay(10L)
 
         }
-    }
-
-
-    LaunchedEffect(recordedTimeListt) {
-
-
     }
 
 
@@ -206,12 +207,19 @@ fun ChronometerScreen() {
                     .fillMaxWidth()
                     .height(250.dp)
                     .padding(top = 50.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally, state = listState
             ) {
                 items(recordedTimeListt) { time ->
                     Text(text = time, fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 }
             }
+
+            // Desplazar automáticamente cuando se agrega un nuevo elemento
+            LaunchedEffect(recordedTimeListt.size) {
+                // Desplazar a la última posición
+                listState.animateScrollToItem(recordedTimeListt.size - 1)
+            }
+
         }
     }
 
